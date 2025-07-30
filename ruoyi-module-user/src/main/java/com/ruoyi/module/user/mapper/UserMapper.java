@@ -1,22 +1,18 @@
-package com.ruoyi.module.user.service;
+package com.ruoyi.module.user.mapper;
 
 import com.ruoyi.module.user.domain.User;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
 /**
- * 用户服务接口
+ * 用户表 数据层
  *
  * @author ruoyi
  */
-public interface UserService {
-
-    /**
-     * 获取用户信息
-     *
-     * @return 用户信息
-     */
-    String getUserInfo();
+@Mapper
+public interface UserMapper {
 
     /**
      * 查询用户列表
@@ -41,14 +37,6 @@ public interface UserService {
      * @return 用户对象信息
      */
     User selectUserById(Long id);
-
-    /**
-     * 校验用户名称是否唯一
-     *
-     * @param username 用户名称
-     * @return 结果
-     */
-    boolean checkUsernameUnique(String username);
 
     /**
      * 新增用户信息
@@ -81,6 +69,14 @@ public interface UserService {
      * @return 结果
      */
     int deleteUserByIds(Long[] ids);
+
+    /**
+     * 校验用户名称是否唯一
+     *
+     * @param username 用户名称
+     * @return 结果
+     */
+    User checkUsernameUnique(String username);
 
     /**
      * 统计用户总数
