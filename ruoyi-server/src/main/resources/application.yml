@@ -1,0 +1,25 @@
+# 项目相关配置
+ruoyi:
+  name: RuoYi
+  version: 1.0.0
+  copyrightYear: 2024
+  demoEnabled: true
+  profile: D:/ruoyi/uploadPath
+
+# 开发环境配置
+server:
+  port: 8080
+  servlet:
+    context-path: /
+  tomcat:
+    uri-encoding: UTF-8
+    accept-count: 1000
+    threads:
+      max: 800
+      min-spare: 100
+
+# 日志配置
+logging:
+  level:
+    com.ruoyi: debug
+    org.springframework: warn 
