@@ -36,12 +36,14 @@
         <mysql.version>8.0.33</mysql.version>
         <mybatis.version>3.0.3</mybatis.version>
         <lombok.version>1.18.28</lombok.version>
+        <jackson.version>2.15.2</jackson.version>
     </properties>
     
     <!-- 子模块 -->
     <modules>
         <module>ruoyi-server</module>
         <module>ruoyi-module-user</module>
+        <module>ruoyi-module-framework</module>
     </modules>
 
     <!-- 依赖管理 -->
@@ -74,6 +76,20 @@
                 <artifactId>lombok</artifactId>
                 <version>${lombok.version}</version>
                 <scope>provided</scope>
+            </dependency>
+            
+            <!-- Jackson -->
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            
+            <!-- Framework Module -->
+            <dependency>
+                <groupId>com.ruoyi</groupId>
+                <artifactId>ruoyi-module-framework</artifactId>
+                <version>${project.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

@@ -19,6 +19,13 @@
     </properties>
     
     <dependencies>
+        <!-- Framework Module -->
+        <dependency>
+            <groupId>org.example</groupId>
+            <artifactId>ruoyi-module-framework</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        
         <!-- Spring Boot Web Starter -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

@@ -1,16 +1,19 @@
 package com.ruoyi.module.user.controller;
-
+import com.ruoyi.module.user.controller.*;
 import com.ruoyi.module.user.domain.User;
 import com.ruoyi.module.user.service.UserService;
+import com.ruoyi.framework.utils.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * 用户管理控制器
@@ -20,6 +23,7 @@ import java.util.Map;
 @Tag(name = "用户管理", description = "用户管理相关接口")
 @RestController
 @RequestMapping("/user")
+@Valid
 public class UserController {
 
     @Autowired
@@ -30,13 +34,8 @@ public class UserController {
      */
     @GetMapping("/info")
     @Operation(summary = "获取用户信息")
-    public Map<String, Object> getUserInfo() {
-        Map<String, Object> result = new HashMap<>();
-        result.put("code", 200);
-        result.put("msg", "获取用户信息成功");
-        result.put("data", userService.getUserInfo());
-        result.put("total", userService.countUsers());
-        return result;
+    public CommonResult<Object> getUserInfo() {
+        return CommonResult.success(userService.getUserInfo(), "获取用户信息成功");
     }
 
     /**
@@ -44,14 +43,9 @@ public class UserController {
      */
     @GetMapping("/list")
     @Operation(summary = "获取用户列表")
-    public Map<String, Object> list(User user) {
+    public CommonResult<List<User>> list(User user) {
         List<User> list = userService.selectUserList(user);
-        Map<String, Object> result = new HashMap<>();
-        result.put("code", 200);
-        result.put("msg", "查询成功");
-        result.put("rows", list);
-        result.put("total", list.size());
-        return result;
+        return CommonResult.success(list, "查询成功");
     }
 
     /**
@@ -59,13 +53,16 @@ public class UserController {
      */
     @GetMapping(value = "/{id}")
     @Operation(summary = "根据用户编号获取详细信息")
-    public Map<String, Object> getInfo(@Parameter(description = "用户ID") @PathVariable Long id) {
+    public CommonResult<User> getInfo(@Parameter(description = "用户ID") 
+                                      @PathVariable 
+                                      @NotNull(message = "用户ID不能为空") 
+                                      @Min(value = 1, message = "用户ID必须大于0") Long id) {
         User user = userService.selectUserById(id);
-        Map<String, Object> result = new HashMap<>();
-        result.put("code", user != null ? 200 : 404);
-        result.put("msg", user != null ? "查询成功" : "用户不存在");
-        result.put("data", user);
-        return result;
+        if (user != null) {
+            return CommonResult.success(user, "查询成功");
+        } else {
+            return CommonResult.error(404, "用户不存在");
+        }
     }
 
     /**
@@ -73,28 +70,21 @@ public class UserController {
      */
     @PostMapping
     @Operation(summary = "新增用户")
-    public Map<String, Object> add(@RequestBody User user) {
-        Map<String, Object> result = new HashMap<>();
-
+    public CommonResult<User> add(@RequestBody @Valid User user) {
         if (user.getUsername() == null || user.getUsername().trim().isEmpty()) {
-            result.put("code", 400);
-            result.put("msg", "用户名不能为空");
-            return result;
+            return CommonResult.error(400, "用户名不能为空");
         }
 
         if (!userService.checkUsernameUnique(user.getUsername())) {
-            result.put("code", 500);
-            result.put("msg", "新增用户'" + user.getUsername() + "'失败，用户名已存在");
-            return result;
+            return CommonResult.error(500, "新增用户'" + user.getUsername() + "'失败，用户名已存在");
         }
 
         int rows = userService.insertUser(user);
-        result.put("code", rows > 0 ? 200 : 500);
-        result.put("msg", rows > 0 ? "新增成功" : "新增失败");
         if (rows > 0) {
-            result.put("data", user);
+            return CommonResult.success(user, "新增成功");
+        } else {
+            return CommonResult.error("新增失败");
         }
-        return result;
     }
 
     /**
@@ -102,35 +92,29 @@ public class UserController {
      */
     @PutMapping
     @Operation(summary = "修改用户")
-    public Map<String, Object> edit(@RequestBody User user) {
-        Map<String, Object> result = new HashMap<>();
-
+    public CommonResult<User> edit(@RequestBody @Valid User user) {
         if (user.getId() == null) {
-            result.put("code", 400);
-            result.put("msg", "用户ID不能为空");
-            return result;
+            return CommonResult.error(400, "用户ID不能为空");
         }
 
         User existUser = userService.selectUserById(user.getId());
         if (existUser == null) {
-            result.put("code", 404);
-            result.put("msg", "用户不存在");
-            return result;
+            return CommonResult.error(404, "用户不存在");
         }
 
         // 如果修改了用户名，需要检查唯一性
         if (user.getUsername() != null && !user.getUsername().equals(existUser.getUsername())) {
             if (!userService.checkUsernameUnique(user.getUsername())) {
-                result.put("code", 500);
-                result.put("msg", "修改用户失败，用户名已存在");
-                return result;
+                return CommonResult.error(500, "修改用户失败，用户名已存在");
             }
         }
 
         int rows = userService.updateUser(user);
-        result.put("code", rows > 0 ? 200 : 500);
-        result.put("msg", rows > 0 ? "修改成功" : "修改失败");
-        return result;
+        if (rows > 0) {
+            return CommonResult.success(user, "修改成功");
+        } else {
+            return CommonResult.error("修改失败");
+        }
     }
 
     /**
@@ -138,12 +122,15 @@ public class UserController {
      */
     @DeleteMapping("/{ids}")
     @Operation(summary = "删除用户")
-    public Map<String, Object> remove(@Parameter(description = "用户ID数组") @PathVariable Long[] ids) {
+    public CommonResult<Void> remove(@Parameter(description = "用户ID数组") 
+                                      @PathVariable 
+                                      @NotNull(message = "用户ID不能为空") Long[] ids) {
         int rows = userService.deleteUserByIds(ids);
-        Map<String, Object> result = new HashMap<>();
-        result.put("code", rows > 0 ? 200 : 500);
-        result.put("msg", rows > 0 ? "删除成功" : "删除失败");
-        return result;
+        if (rows > 0) {
+            return CommonResult.success(null, "删除成功");
+        } else {
+            return CommonResult.error("删除失败");
+        }
     }
 
     /**
@@ -151,12 +138,8 @@ public class UserController {
      */
     @GetMapping("/count")
     @Operation(summary = "统计用户总数")
-    public Map<String, Object> count() {
+    public CommonResult<Integer> count() {
         int total = userService.countUsers();
-        Map<String, Object> result = new HashMap<>();
-        result.put("code", 200);
-        result.put("msg", "统计成功");
-        result.put("data", total);
-        return result;
+        return CommonResult.success(total, "统计成功");
     }
 }

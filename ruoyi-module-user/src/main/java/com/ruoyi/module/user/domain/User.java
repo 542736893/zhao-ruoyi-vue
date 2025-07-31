@@ -5,6 +5,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Max;
+
 import java.io.Serializable;
 
 /**
@@ -25,10 +30,13 @@ public class User implements Serializable {
 
     /** 用户名 */
     @Schema(description = "用户名")
+    @NotBlank(message = "用户名不能为空")
     private String username;
 
     /** 年龄 */
     @Schema(description = "年龄")
+    @Min(value = 0, message = "年龄必须大于等于0")
+    @Max(value = 150, message = "年龄必须小于等于150")
     private Integer age;
 
     // 无参构造函数
