@@ -86,7 +86,7 @@ public class AuthServiceImpl implements AuthService {
             }
 
             // 获取用户权限
-            String authorities = getUserAuthorities(user);
+            String authorities = "";
 
             // 生成新的访问令牌
             String newAccessToken = jwtUtils.generateToken(user.getUsername(), user.getId(), authorities);
@@ -116,11 +116,6 @@ public class AuthServiceImpl implements AuthService {
      * @return 权限字符串
      */
     private String getUserAuthorities(User user) {
-        // 简化处理：根据用户名分配权限
-        if ("admin".equals(user.getUsername())) {
-            return "ROLE_ADMIN,ROLE_USER";
-        } else {
-            return "ROLE_USER";
-        }
+        return "ROLE_USER";
     }
 }

@@ -2,7 +2,8 @@ package com.ruoyi.framework.config;
 
 import com.ruoyi.framework.security.JwtAuthenticationFilter;
 import com.ruoyi.framework.security.JwtAuthenticationEntryPoint;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.ruoyi.framework.utils.JwtUtils;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -32,11 +33,22 @@ import java.util.Arrays;
 @EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
-    @Autowired
-    private JwtAuthenticationFilter jwtAuthenticationFilter;
+    /**
+     * JWT 工具类 Bean
+     */
+    @Bean
+    public JwtUtils jwtUtils() {
+        return new JwtUtils();
+    }
 
-    @Autowired
-    private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+    /**
+     * JWT 认证入口点 Bean
+     */
+    @Bean
+    public JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint() {
+        return new JwtAuthenticationEntryPoint();
+    }
+
 
     /**
      * 密码编码器
@@ -58,7 +70,11 @@ public class SecurityConfig {
      * 安全过滤器链
      */
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, JwtUtils jwtUtils) throws Exception {
+        // 手动创建JWT认证过滤器
+        JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter();
+        jwtAuthenticationFilter.setJwtUtils(jwtUtils);
+        
         http
             // 禁用 CSRF
             .csrf(AbstractHttpConfigurer::disable)
@@ -72,7 +88,7 @@ public class SecurityConfig {
             
             // 配置异常处理
             .exceptionHandling(exception -> 
-                exception.authenticationEntryPoint(jwtAuthenticationEntryPoint))
+                exception.authenticationEntryPoint(jwtAuthenticationEntryPoint()))
             
             // 配置请求授权
             .authorizeHttpRequests(auth -> auth

@@ -17,7 +17,6 @@ import java.io.IOException;
  * 
  * @author ruoyi
  */
-@Component
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
     @Override

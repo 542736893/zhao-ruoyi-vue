@@ -24,7 +24,6 @@ import java.util.stream.Collectors;
  * 
  * @author ruoyi
  */
-@Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Autowired
@@ -39,6 +38,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
      * JWT Token 前缀
      */
     private static final String TOKEN_PREFIX = "Bearer ";
+
+    public void setJwtUtils(JwtUtils jwtUtils) {
+        this.jwtUtils = jwtUtils;
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, 

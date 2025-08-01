@@ -2,7 +2,6 @@ package com.ruoyi.framework.utils;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -23,11 +22,11 @@ public class JwtUtils {
      * JWT 密钥（仅用于日志或调试，实际密钥由安全API生成）
      */
     private String secret = "SECURELY_GENERATED_VIA_KEYS_API";
-
-    public JwtUtils() {
-        // 密钥由安全生成器自动创建，避免配置风险
-        this.secret = "SECURELY_GENERATED_VIA_KEYS_API";
-    }
+    
+    /**
+     * JWT 签名密钥（静态密钥确保签名一致性）
+     */
+    private static final SecretKey SIGNING_KEY = Keys.secretKeyFor(SignatureAlgorithm.HS512);
 
     /**
      * JWT 过期时间（毫秒）
@@ -228,6 +227,7 @@ public class JwtUtils {
                     .parseClaimsJws(token);
             return !isTokenExpired(token);
         } catch (JwtException | IllegalArgumentException e) {
+            e.printStackTrace();
             return false;
         }
     }
@@ -238,7 +238,7 @@ public class JwtUtils {
      * @return 签名密钥
      */
     private SecretKey getSigningKey() {
-        return Keys.secretKeyFor(SignatureAlgorithm.HS512);
+        return SIGNING_KEY;
     }
 
     /**
