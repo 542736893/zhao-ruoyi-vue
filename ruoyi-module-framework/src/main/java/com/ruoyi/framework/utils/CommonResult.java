@@ -3,7 +3,6 @@ package com.ruoyi.framework.utils;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
 
 import java.io.Serializable;
 
@@ -15,7 +14,6 @@ import java.io.Serializable;
  */
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 @Schema(description = "通用响应结果")
 public class CommonResult<T> implements Serializable {
 
@@ -38,6 +36,15 @@ public class CommonResult<T> implements Serializable {
      */
     @Schema(description = "响应数据")
     private T data;
+
+    /**
+     * 全参构造函数
+     */
+    public CommonResult(Integer code, String msg, T data) {
+        this.code = code;
+        this.msg = msg;
+        this.data = data;
+    }
 
     /**
      * 成功响应（无数据）

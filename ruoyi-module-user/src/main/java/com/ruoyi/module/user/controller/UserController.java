@@ -1,8 +1,7 @@
 package com.ruoyi.module.user.controller;
-import com.ruoyi.module.user.controller.*;
+import com.ruoyi.framework.utils.CommonResult;
 import com.ruoyi.module.user.domain.User;
 import com.ruoyi.module.user.service.UserService;
-import com.ruoyi.framework.utils.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;

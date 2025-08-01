@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.module.user.mapper.UserResourceMapper">
+
+    <resultMap type="com.ruoyi.module.user.domain.UserResource" id="UserResourceResult">
+        <id     property="id"           column="id"           />
+        <result property="userId"       column="user_id"      />
+        <result property="resourceId"   column="resource_id"  />
+    </resultMap>
+
+    <sql id="selectUserResourceVo">
+        select id, user_id, resource_id
+        from user_resource
+    </sql>
+
+    <select id="selectUserResourceList" parameterType="com.ruoyi.module.user.domain.UserResource" resultMap="UserResourceResult">
+        <include refid="selectUserResourceVo"/>
+        <where>
+            <if test="id != null and id != 0">
+                AND id = #{id}
+            </if>
+            <if test="userId != null and userId != 0">
+                AND user_id = #{userId}
+            </if>
+            <if test="resourceId != null and resourceId != 0">
+                AND resource_id = #{resourceId}
+            </if>
+        </where>
+        ORDER BY id DESC
+    </select>
+
+    <select id="selectUserResourceById" parameterType="Long" resultMap="UserResourceResult">
+        <include refid="selectUserResourceVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectUserResourceByUserId" parameterType="Long" resultMap="UserResourceResult">
+        <include refid="selectUserResourceVo"/>
+        where user_id = #{userId}
+        order by resource_id
+    </select>
+
+    <select id="selectUserResourceByResourceId" parameterType="Long" resultMap="UserResourceResult">
+        <include refid="selectUserResourceVo"/>
+        where resource_id = #{resourceId}
+        order by user_id
+    </select>
+
+    <select id="selectUserResourceByUserIdAndResourceId" resultMap="UserResourceResult">
+        <include refid="selectUserResourceVo"/>
+        where user_id = #{userId} and resource_id = #{resourceId}
+    </select>
+
+    <select id="countUserResources" resultType="int">
+        select count(*) from user_resource
+    </select>
+
+    <select id="countResourcesByUserId" parameterType="Long" resultType="int">
+        select count(*) from user_resource where user_id = #{userId}
+    </select>
+
+    <select id="countUsersByResourceId" parameterType="Long" resultType="int">
+        select count(*) from user_resource where resource_id = #{resourceId}
+    </select>
+
+    <insert id="insertUserResource" parameterType="com.ruoyi.module.user.domain.UserResource" useGeneratedKeys="true" keyProperty="id">
+        insert into user_resource(
+            <if test="userId != null">user_id,</if>
+            <if test="resourceId != null">resource_id</if>
+        )values(
+            <if test="userId != null">#{userId},</if>
+            <if test="resourceId != null">#{resourceId}</if>
+        )
+    </insert>
+
+    <insert id="batchInsertUserResource" parameterType="java.util.List">
+        insert into user_resource(user_id, resource_id) values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.userId}, #{item.resourceId})
+        </foreach>
+    </insert>
+
+    <delete id="deleteUserResourceById" parameterType="Long">
+        delete from user_resource where id = #{id}
+    </delete>
+
+    <delete id="deleteUserResourceByUserId" parameterType="Long">
+        delete from user_resource where user_id = #{userId}
+    </delete>
+
+    <delete id="deleteUserResourceByResourceId" parameterType="Long">
+        delete from user_resource where resource_id = #{resourceId}
+    </delete>
+
+    <delete id="deleteUserResourceByUserIdAndResourceId">
+        delete from user_resource where user_id = #{userId} and resource_id = #{resourceId}
+    </delete>
+
+    <delete id="deleteUserResourceByIds" parameterType="String">
+        delete from user_resource where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

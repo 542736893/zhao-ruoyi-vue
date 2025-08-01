@@ -5,13 +5,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="com.ruoyi.module.user.mapper.UserMapper">
 
     <resultMap type="com.ruoyi.module.user.domain.User" id="UserResult">
-        <id     property="id"           column="id"           />
-        <result property="username"     column="username"     />
-        <result property="age"          column="age"          />
+        <id     property="id"           jdbcType="BIGINT" column="id"           />
+        <result property="username"     jdbcType="VARCHAR" column="username"     />
+        <result property="age"          jdbcType="INTEGER" column="age"          />
+        <result property="password"     jdbcType="VARCHAR" column="password"     />
     </resultMap>
 
     <sql id="selectUserVo">
-        select id, username, age
+        select id, username, age, password
         from user
     </sql>
 

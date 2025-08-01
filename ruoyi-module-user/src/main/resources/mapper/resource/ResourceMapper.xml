@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.module.user.mapper.ResourceMapper">
+
+    <resultMap type="com.ruoyi.module.user.domain.Resource" id="ResourceResult">
+        <id     property="resourceId"   column="resource_id"  />
+        <result property="code"         column="code"         />
+    </resultMap>
+
+    <sql id="selectResourceVo">
+        select resource_id, code
+        from resource
+    </sql>
+
+    <select id="selectResourceList" parameterType="com.ruoyi.module.user.domain.Resource" resultMap="ResourceResult">
+        <include refid="selectResourceVo"/>
+        <where>
+            <if test="resourceId != null and resourceId != 0">
+                AND resource_id = #{resourceId}
+            </if>
+            <if test="code != null and code != ''">
+                AND code like concat('%', #{code}, '%')
+            </if>
+        </where>
+        ORDER BY resource_id DESC
+    </select>
+
+    <select id="selectResourceById" parameterType="Long" resultMap="ResourceResult">
+        <include refid="selectResourceVo"/>
+        where resource_id = #{resourceId}
+    </select>
+
+    <select id="selectResourceByCode" parameterType="String" resultMap="ResourceResult">
+        <include refid="selectResourceVo"/>
+        where code = #{code}
+    </select>
+
+    <select id="checkCodeUnique" parameterType="String" resultMap="ResourceResult">
+        <include refid="selectResourceVo"/>
+        where code = #{code} limit 1
+    </select>
+
+    <select id="countResources" resultType="int">
+        select count(*) from resource
+    </select>
+
+    <select id="selectResourcesByUserId" parameterType="Long" resultMap="ResourceResult">
+        select r.resource_id, r.code
+        from resource r
+        inner join user_resource ur on r.resource_id = ur.resource_id
+        where ur.user_id = #{userId}
+        order by r.resource_id
+    </select>
+
+    <insert id="insertResource" parameterType="com.ruoyi.module.user.domain.Resource" useGeneratedKeys="true" keyProperty="resourceId">
+        insert into resource(
+            <if test="code != null and code != ''">code</if>
+        )values(
+            <if test="code != null and code != ''">#{code}</if>
+        )
+    </insert>
+
+    <update id="updateResource" parameterType="com.ruoyi.module.user.domain.Resource">
+        update resource
+        <set>
+            <if test="code != null and code != ''">code = #{code}</if>
+        </set>
+        where resource_id = #{resourceId}
+    </update>
+
+    <delete id="deleteResourceById" parameterType="Long">
+        delete from resource where resource_id = #{resourceId}
+    </delete>
+
+    <delete id="deleteResourceByIds" parameterType="String">
+        delete from resource where resource_id in
+        <foreach item="resourceId" collection="array" open="(" separator="," close=")">
+            #{resourceId}
+        </foreach>
+    </delete>
+
+</mapper>

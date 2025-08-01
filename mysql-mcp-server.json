@@ -1,0 +1,78 @@
+{
+  "mcpServers": {
+    "mysql-local": {
+      "command": "python3",
+      "args": [
+        "/Users/zhaozb/Documents/Code/zhao-ruoyi-vue/mysql-mcp-server.py"
+      ],
+      "env": {
+        "MYSQL_HOST": "localhost",
+        "MYSQL_PORT": "3306",
+        "MYSQL_USER": "root",
+        "MYSQL_PASSWORD": "123456",
+        "MYSQL_DATABASE": "zhaoruoyi"
+      },
+      "description": "本地 MySQL 数据库连接服务器，用于访问 zhaoruoyi 数据库",
+      "capabilities": [
+        "tools"
+      ],
+      "tools": [
+        {
+          "name": "mysql_query",
+          "description": "执行任意 MySQL 查询语句，支持 SELECT、INSERT、UPDATE、DELETE 等操作"
+        },
+        {
+          "name": "mysql_show_databases",
+          "description": "显示 MySQL 服务器中的所有数据库"
+        },
+        {
+          "name": "mysql_show_tables",
+          "description": "显示指定数据库中的所有表"
+        },
+        {
+          "name": "mysql_describe_table",
+          "description": "显示指定表的结构信息，包括字段名、类型、约束等"
+        }
+      ]
+    },
+    "mysql-ruoyi-user": {
+      "command": "python3",
+      "args": [
+        "/Users/zhaozb/Documents/Code/zhao-ruoyi-vue/mysql-mcp-server.py"
+      ],
+      "env": {
+        "MYSQL_HOST": "localhost",
+        "MYSQL_PORT": "3306",
+        "MYSQL_USER": "root",
+        "MYSQL_PASSWORD": "123456",
+        "MYSQL_DATABASE": "zhaoruoyi"
+      },
+      "description": "专门用于 ruoyi-module-user 项目的 MySQL 连接，预配置连接到 zhaoruoyi 数据库",
+      "capabilities": [
+        "tools"
+      ],
+      "defaultQueries": {
+        "listUsers": "SELECT user_id, username, nick_name, email, phone_number, sex, status, create_time FROM user WHERE del_flag = '0' ORDER BY create_time DESC",
+        "getUserById": "SELECT * FROM user WHERE user_id = ? AND del_flag = '0'",
+        "getUserByUsername": "SELECT * FROM user WHERE username = ? AND del_flag = '0'",
+        "createUser": "INSERT INTO user (username, nick_name, email, phone_number, sex, password, status, create_by, create_time) VALUES (?, ?, ?, ?, ?, ?, '0', 'system', NOW())",
+        "updateUser": "UPDATE user SET nick_name = ?, email = ?, phone_number = ?, sex = ?, update_by = 'system', update_time = NOW() WHERE user_id = ?",
+        "deleteUser": "UPDATE user SET del_flag = '2', update_by = 'system', update_time = NOW() WHERE user_id = ?"
+      }
+    }
+  },
+  "globalSettings": {
+    "mysql": {
+      "connectionTimeout": 30,
+      "queryTimeout": 60,
+      "maxRetries": 3,
+      "charset": "utf8mb4",
+      "collation": "utf8mb4_unicode_ci"
+    },
+    "logging": {
+      "level": "INFO",
+      "logQueries": true,
+      "logResults": false
+    }
+  }
+}

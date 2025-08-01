@@ -9,7 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  *
  * @author ruoyi
  */
-@SpringBootApplication(scanBasePackages = {"com.ruoyi.server","com.ruoyi.module.*"})
+@SpringBootApplication(scanBasePackages = {"com.ruoyi.server","com.ruoyi.module.*","com.ruoyi.framework.*"})
 @MapperScan("com.ruoyi.module.*.mapper")
 public class RuoYiServerApplication {
 

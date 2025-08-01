@@ -39,6 +39,13 @@ public class User implements Serializable {
     @Max(value = 150, message = "年龄必须小于等于150")
     private Integer age;
 
+
+    /** 密码 */
+    @Schema(description = "密码")
+    @NotBlank(message = "密码不能为空")
+    private String password;
+
+
     // 无参构造函数
     public User() {
     }
@@ -48,7 +55,7 @@ public class User implements Serializable {
         this.id = id;
     }
 
-    // 手动添加 getter 和 setter 方法（Lombok 可能没有正确工作）
+    // 手动添加 getter 和 setter 方法
     public Long getId() {
         return id;
     }
@@ -73,12 +80,21 @@ public class User implements Serializable {
         this.age = age;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     @Override
     public String toString() {
         return "User{" +
                 "id=" + id +
                 ", username='" + username + '\'' +
                 ", age=" + age +
+                ", password='" + password + '\'' +
                 '}';
     }
 }

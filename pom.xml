@@ -37,6 +37,8 @@
         <mybatis.version>3.0.3</mybatis.version>
         <lombok.version>1.18.28</lombok.version>
         <jackson.version>2.15.2</jackson.version>
+        <fastjson.version>1.2.83</fastjson.version>
+        <jjwt.version>0.11.5</jjwt.version>
     </properties>
     
     <!-- 子模块 -->
@@ -84,7 +86,31 @@
                 <artifactId>jackson-databind</artifactId>
                 <version>${jackson.version}</version>
             </dependency>
-            
+
+            <!-- Fastjson -->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>fastjson</artifactId>
+                <version>${fastjson.version}</version>
+            </dependency>
+
+            <!-- JWT -->
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-api</artifactId>
+                <version>${jjwt.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-impl</artifactId>
+                <version>${jjwt.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-jackson</artifactId>
+                <version>${jjwt.version}</version>
+            </dependency>
+
             <!-- Framework Module -->
             <dependency>
                 <groupId>com.ruoyi</groupId>

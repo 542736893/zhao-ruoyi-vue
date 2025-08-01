@@ -1,0 +1,80 @@
+{
+  "mcpServers": {
+    "mysql-zhaoruoyi": {
+      "command": "python3",
+      "args": [
+        "/Users/zhaozb/Documents/Document/mcp/mysql/mysql-mcp-tool.py"
+      ],
+      "env": {
+        "MYSQL_HOST": "localhost",
+        "MYSQL_PORT": "3306",
+        "MYSQL_USER": "root",
+        "MYSQL_PASSWORD": "123456",
+        "MYSQL_DATABASE": "zhaoruoyi"
+      },
+      "description": "MySQL MCP 服务器，用于访问本地 zhaoruoyi 数据库",
+      "capabilities": [
+        "tools"
+      ]
+    }
+  },
+  "tools": {
+    "mysql_query": {
+      "description": "执行 MySQL 查询语句，支持 SELECT、INSERT、UPDATE、DELETE 等所有 SQL 操作",
+      "examples": [
+        "SELECT * FROM user LIMIT 10",
+        "INSERT INTO user (username, age) VALUES ('test', 25)",
+        "UPDATE user SET age = 26 WHERE username = 'test'",
+        "DELETE FROM user WHERE username = 'test'"
+      ]
+    },
+    "mysql_show_databases": {
+      "description": "显示 MySQL 服务器中的所有数据库"
+    },
+    "mysql_show_tables": {
+      "description": "显示指定数据库中的所有表"
+    },
+    "mysql_describe_table": {
+      "description": "显示指定表的结构信息，包括字段名、类型、约束等"
+    },
+    "mysql_table_info": {
+      "description": "获取表的详细信息，包括行数、大小等统计信息"
+    }
+  },
+  "database_info": {
+    "host": "localhost",
+    "port": 3306,
+    "database": "zhaoruoyi",
+    "user": "root",
+    "charset": "utf8mb4",
+    "tables": {
+      "user": {
+        "description": "用户信息表",
+        "fields": {
+          "id": "bigint - 用户ID，主键，自增",
+          "username": "varchar(50) - 用户名，非空，唯一",
+          "age": "int - 年龄，可空"
+        },
+        "common_queries": {
+          "list_all": "SELECT * FROM user",
+          "count_users": "SELECT COUNT(*) as total FROM user",
+          "find_by_username": "SELECT * FROM user WHERE username = ?",
+          "find_by_id": "SELECT * FROM user WHERE id = ?"
+        }
+      }
+    }
+  },
+  "usage_examples": {
+    "查询所有用户": "使用 mysql_query 工具执行: SELECT * FROM user",
+    "查看表结构": "使用 mysql_describe_table 工具查看 user 表结构",
+    "统计用户数量": "使用 mysql_query 工具执行: SELECT COUNT(*) FROM user",
+    "添加新用户": "使用 mysql_query 工具执行: INSERT INTO user (username, age) VALUES ('newuser', 30)",
+    "更新用户信息": "使用 mysql_query 工具执行: UPDATE user SET age = 31 WHERE username = 'newuser'",
+    "删除用户": "使用 mysql_query 工具执行: DELETE FROM user WHERE username = 'newuser'"
+  },
+  "security_notes": {
+    "password_security": "当前使用的是开发环境密码，生产环境请使用更安全的密码",
+    "access_control": "建议为 MCP 工具创建专门的数据库用户，限制权限",
+    "data_backup": "执行修改操作前请确保数据已备份"
+  }
+}
