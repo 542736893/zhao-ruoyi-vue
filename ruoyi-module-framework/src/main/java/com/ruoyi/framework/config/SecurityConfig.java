@@ -49,6 +49,12 @@ public class SecurityConfig {
         return new JwtAuthenticationEntryPoint();
     }
 
+    @Bean
+    public JwtAuthenticationFilter jwtAuthenticationFilter(@Qualifier("jwtUtils") JwtUtils jwtUtils) {
+        JwtAuthenticationFilter filter = new JwtAuthenticationFilter();
+        filter.setJwtUtils(jwtUtils);
+        return filter;
+    }
 
     /**
      * 密码编码器
@@ -70,10 +76,7 @@ public class SecurityConfig {
      * 安全过滤器链
      */
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, JwtUtils jwtUtils) throws Exception {
-        // 手动创建JWT认证过滤器
-        JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter();
-        jwtAuthenticationFilter.setJwtUtils(jwtUtils);
+    public SecurityFilterChain filterChain(HttpSecurity http, JwtAuthenticationFilter jwtAuthenticationFilter) throws Exception {
         
         http
             // 禁用 CSRF

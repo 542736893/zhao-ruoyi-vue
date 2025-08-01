@@ -12,10 +12,9 @@ import java.util.Map;
 
 /**
  * JWT 工具类
- * 
+ *
  * @author ruoyi
  */
-@Component
 public class JwtUtils {
 
     /**
